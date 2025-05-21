@@ -1,0 +1,129 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-center flex-grow-1">Nueva Venta</h1>
+    <%= link_to "Volver al historial", sales_path, class: "btn btn-secondary ms-3" %>
+  </div>
+
+  <% if flash[:alert] %>
+    <div class="alert alert-danger"><%= flash[:alert] %></div>
+  <% end %>
+
+  <!-- Búsqueda -->
+  <div class="mb-4">
+    <input type="text" id="search-input" class="form-control" placeholder="Buscar producto por nombre...">
+  </div>
+
+  <%= form_with url: sales_path, method: :post, class: "needs-validation" do |f| %>
+    <!-- Tabla de productos -->
+    <div class="table-responsive mb-4">
+      <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body">
+          <% @products.each_with_index do |product, index| %>
+            <tr class="product-row">
+              <td>
+                <%= product.nombre %>
+                <%= hidden_field_tag "sale_items[][product_id]", product.id %>
+              </td>
+              <td>$<%= product.precio %></td>
+              <td><%= product.stock %></td>
+              <td>
+                <%= number_field_tag "sale_items[][cantidad]", 0, min: 0, max: product.stock,
+                      class: "form-control cantidad-input", data: { index: index }, id: "cantidad_#{product.id}" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Factura -->
+    <div class="form-check mb-3">
+      <%= f.check_box :con_factura, class: "form-check-input", id: "con-factura-checkbox" %>
+      <%= f.label :con_factura, "¿Desea factura?", class: "form-check-label" %>
+    </div>
+
+    <div id="datos-factura" style="display: none;">
+      <div class="mb-3">
+        <%= f.label :nombre_cliente, "Nombre del cliente" %>
+        <%= f.text_field :nombre_cliente, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :cedula, "Cédula o NIT" %>
+        <%= f.text_field :cedula, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :direccion, "Dirección" %>
+        <%= f.text_field :direccion, class: "form-control" %>
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="mb-4 text-end">
+      <strong>Total estimado: </strong> <span id="total-estimado">$0.00</span>
+    </div>
+
+    <!-- Botón de enviar -->
+    <div class="text-center">
+      <%= submit_tag "Registrar venta", class: "btn btn-primary px-4 py-2" %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Scripts -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const cantidadInputs = document.querySelectorAll(".cantidad-input");
+    const precios = <%= raw @products.map(&:precio).to_json %>;
+
+    const updateTotal = () => {
+      let total = 0;
+      cantidadInputs.forEach(input => {
+        const index = input.dataset.index;
+        const cantidad = parseInt(input.value) || 0;
+        total += cantidad * precios[index];
+      });
+      document.getElementById("total-estimado").textContent = `$${total.toFixed(2)}`;
+    };
+
+    cantidadInputs.forEach(input => {
+      input.addEventListener("input", updateTotal);
+    });
+
+    updateTotal();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const checkbox = document.getElementById("con-factura-checkbox");
+    const datosFactura = document.getElementById("datos-factura");
+
+    const toggleFields = () => {
+      datosFactura.style.display = checkbox.checked ? "block" : "none";
+    };
+
+    checkbox.addEventListener("change", toggleFields);
+    toggleFields();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("search-input");
+    const productRows = document.querySelectorAll(".product-row");
+
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.toLowerCase();
+      productRows.forEach(row => {
+        const name = row.querySelector("td").textContent.toLowerCase();
+        row.style.display = name.includes(query) ? "" : "none";
+      });
+    });
+  });
+</script>

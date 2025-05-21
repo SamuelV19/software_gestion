@@ -1,0 +1,26 @@
+es:
+  activerecord:
+    models:
+      invoice: "Factura"
+    attributes:
+      invoice:
+        nombre_cliente: "Nombre cliente"
+        cedula: "Cédula"
+        direccion: "Dirección"
+        total: "Total"
+        fecha_emision: "Fecha emisión"
+  errors:
+  messages:
+    blank: "no puede estar en blanco"
+    too_short: "es demasiado corto (mínimo %{count} caracteres)"
+    invalid: "es inválido"
+  time:
+    formats:
+      default: "%H:%M:%S"
+      short: "%d %b %H:%M"
+      long: "%d de %B de %Y a las %H:%M"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%d de %B de %Y"

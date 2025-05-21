@@ -1,0 +1,77 @@
+@import "bootstrap";
+
+// Paleta
+$dusty-green: #7A9E7E;
+$warm-orange: #C97B49;
+$light-beige: #F4EDE4;
+$dark-gray: #4A4A4A;
+$skin-tone: #E7B288;
+$ivory: #F9F8F4;
+
+// Estilos generales
+body {
+  background-color: $ivory;
+  color: $dark-gray;
+  font-family: 'Helvetica Neue', sans-serif;
+  padding: 2rem;
+}
+
+h1.title {
+  color: $dusty-green;
+  margin-bottom: 1.5rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $light-beige;
+  border: 1px solid $dark-gray;
+  box-shadow: 0 0 10px rgba(74, 74, 74, 0.1);
+}
+
+.table th, .table td {
+  border: 1px solid $dark-gray;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.table th {
+  background-color: $dusty-green;
+  color: white;
+}
+
+.table td {
+  background-color: $ivory;
+}
+
+.actions {
+  margin-bottom: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  display: inline-block;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: $warm-orange;
+  color: white;
+
+  &:hover {
+    background-color: darken($warm-orange, 10%);
+  }
+}
+
+.btn-secondary {
+  background-color: $dusty-green;
+  color: white;
+
+  &:hover {
+    background-color: darken($dusty-green, 10%);
+  }
+}

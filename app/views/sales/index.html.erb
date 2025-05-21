@@ -1,0 +1,74 @@
+<div class="container-fluid py-4" style="background-color: #F9F8F4;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-dark" style="color: #4A4A4A;">Historial de Ventas</h1>
+    <div>
+      <%= link_to "Informes de ventas", sales_summary_reports_path, class: "btn me-2", style: "background-color: #C97B49; color: white;" %>
+      <%= link_to "Registrar nueva venta", new_sale_path, class: "btn", style: "background-color: #7A9E7E; color: white;" %>
+      <%= link_to "Admin", admin_root_path, class: "btn", style: "background-color: #4A4A4A; color: white;" %>
+    </div>
+  </div>
+
+  <%= form_tag sales_path, method: :get, class: "row g-3 align-items-end mb-4" do %>
+    <div class="col-md-3">
+      <label class="form-label" style="color: #4A4A4A;">Desde:</label>
+      <%= date_field_tag :start_date, params[:start_date], class: "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" style="color: #4A4A4A;">Hasta:</label>
+      <%= date_field_tag :end_date, params[:end_date], class: "form-control" %>
+    </div>
+    <div class="col-md-auto">
+      <%= submit_tag "Filtrar", class: "btn", style: "background-color: #C97B49; color: white;" %>
+    </div>
+  <% end %>
+
+  <% if params[:start_date].present? && params[:end_date].present? %>
+    <p class="text-muted">Mostrando ventas desde <strong><%= params[:start_date] %></strong> hasta <strong><%= params[:end_date] %></strong></p>
+  <% else %>
+    <p class="text-muted">Mostrando ventas recientes</p>
+  <% end %>
+
+  <div class="mb-3">
+    <p>Total facturado: <strong style="color: #7A9E7E;">$<%= @total_ventas %></strong></p>
+    <p>Cantidad de ventas: <strong style="color: #7A9E7E;"><%= @cantidad_ventas %></strong></p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle" style="background-color: #F4EDE4;">
+      <thead style="background-color: #E7B288; color: #4A4A4A;">
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Factura</th>
+          <th colspan="2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @sales.each do |sale| %>
+          <tr>
+            <td><%= sale.id %></td>
+            <td><%= sale.fecha.strftime("%d/%m/%Y %H:%M") %></td>
+            <td><%= sale.nombre_cliente.presence || "Sin nombre" %></td>
+            <td>$<%= sale.total %></td>
+            <td><%= sale.invoice.present? ? "Sí" : "No" %></td>
+            <td>
+              <% unless sale.anulada %>
+                <%= link_to "Anular", cancel_sale_path(sale), method: :patch, data: { confirm: "¿Estás seguro de que quieres anular esta venta?" }, class: "btn btn-sm", style: "background-color: #C97B49; color: white;" %>
+              <% else %>
+                <span class="text-danger fw-bold">Anulada</span>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to "Ver", sale_path(sale), class: "btn btn-sm btn-outline-secondary" %>
+              <% if sale.invoice.present? %>
+                <%= link_to "PDF", invoice_pdf_sale_path(sale), class: "btn btn-sm", style: "background-color: #7A9E7E; color: white;" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

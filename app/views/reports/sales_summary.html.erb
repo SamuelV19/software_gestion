@@ -1,0 +1,82 @@
+<div class="container mt-4">
+  <h2>Informe de Ventas</h2>
+
+  <%= form_with url: sales_summary_reports_path, method: :get, local: true, class: "mb-4" do |form| %>
+    <div class="row">
+      <div class="col-md-4">
+        <%= form.label :start_date, "Fecha inicio" %>
+        <%= form.date_field :start_date, value: params[:start_date] || 1.month.ago.to_date %>
+      </div>
+      <div class="col-md-4">
+        <%= form.label :end_date, "Fecha fin" %>
+        <%= form.date_field :end_date, value: params[:end_date] || Date.today %>
+      </div>
+    <div class="col-md-4 d-flex justify-content-end gap-2">
+  <%= form.submit "Aplicar filtros", class: "btn btn-primary" %>
+  <%= link_to "Exportar CSV", export_csv_reports_path(start_date: params[:start_date], end_date: params[:end_date]), class: "btn btn-success" %>
+  <%= link_to "Volver al historial", sales_path, class: "btn btn-primary" %>
+</div>
+
+    </div>
+  <% end %>
+
+  <h4>Ventas Diarias</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Total Ventas</th>
+        <th>Cantidad Ventas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @daily_sales.each do |day| %>
+        <tr>
+          <td><%= day.day.strftime("%d/%m/%Y") %></td>
+          <td>$<%= day.total_sales %></td>
+          <td><%= day.total_sales_count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h4>Ventas Semanales</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Semana Inicio</th>
+        <th>Total Ventas</th>
+        <th>Cantidad Ventas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @weekly_sales.each do |week| %>
+        <tr>
+          <td><%= week.week_start.to_date.strftime("%d/%m/%Y") %></td>
+          <td>$<%= week.total_sales %></td>
+          <td><%= week.total_sales_count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h4>Ventas Mensuales</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Mes</th>
+        <th>Total Ventas</th>
+        <th>Cantidad Ventas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @monthly_sales.each do |month| %>
+        <tr>
+          <td><%= month.month_start.to_date.strftime("%m/%Y") %></td>
+          <td>$<%= month.total_sales %></td>
+          <td><%= month.total_sales_count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
