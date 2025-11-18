@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resource :etl, only: [:show] do
+    get :run
+  end
+  
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
@@ -10,7 +14,7 @@ Rails.application.routes.draw do
       get :invoice_pdf
       patch :cancel
     end
-  end  
+  end
 
   resources :reports, only: [:index] do
     collection do

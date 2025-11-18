@@ -15,5 +15,7 @@ module GestionPapeleria
     config.i18n.default_locale = :es
     config.time_zone = 'Bogota'
     config.active_record.default_timezone = :local
+    config.autoload_paths << Rails.root.join("app/services")
+    config.eager_load_paths << Rails.root.join("app/services")
   end
 end

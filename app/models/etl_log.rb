@@ -1,0 +1,2 @@
+class EtlLog < ApplicationRecord
+end
