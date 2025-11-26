@@ -76,4 +76,3 @@ gem 'sassc-rails'
 gem 'bootstrap', '~> 5.3.0'
 gem 'prawn-table'
 gem "ruby-openai", require: 'openai'
-gem 'dotenv-rails', groups: [:development, :test]

@@ -1,5 +1,14 @@
 <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; text-align:center;">
   <h1 style="margin-bottom:20px;">ETL Dashboard</h1>
 
-  <%= link_to "Ejecutar ETL (API)", run_etl_path, class: "btn btn-primary", style: "padding:10px 20px; font-size:16px;" %>
+  <%= link_to "Ejecutar ETL (API)", run_etl_path, class: "btn btn-primary", style: "padding:10px 20px; font-size:16px; margin-bottom:15px;" %>
+
+  <%= form_with url: run_etl_path, multipart: true, method: :post, local: true do |form| %>
+    <div style="margin-top:10px;">
+      <%= form.file_field :file, accept: ".csv" %>
+    </div>
+    <div style="margin-top:10px;">
+      <%= form.submit "Cargar CSV", class: "btn btn-secondary", style: "padding:10px 20px; font-size:16px;" %>
+    </div>
+  <% end %>
 </div>

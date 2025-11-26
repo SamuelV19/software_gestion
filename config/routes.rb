@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   resource :etl, only: [:show] do
-    get :run
+    collection do
+      get  :run    # para ETL vía API
+      post :run    # para ETL vía CSV
+    end
   end
+
   
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
